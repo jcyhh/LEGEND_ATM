@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节点销售合约 - 管理后台</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .wallet-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .wallet-address {
+            color: #666;
+            font-family: monospace;
+            padding: 10px 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .node-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .node-info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .node-info p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .recipients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .recipient-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .recipient-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .recipient-item p {
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🎯 节点销售合约 - 管理后台</h1>
+            <div class="wallet-info">
+                <div>
+                    <div class="wallet-address" id="walletAddress">未连接钱包</div>
+                    <div class="wallet-address" style="margin-top: 10px;">合约: <span id="contractAddress">未设置</span></div>
+                    <div class="wallet-address" style="margin-top: 10px; color: #667eea; font-weight: 600;" id="contractBalance">合约余额: 加载中...</div>
+                </div>
+                <button id="connectWallet" onclick="connectWallet()">连接钱包</button>
+            </div>
+        </div>
+
+        <!-- 合约地址设置 -->
+        <div class="section">
+            <h2>⚙️ 合约设置</h2>
+            <div class="form-group">
+                <label>合约地址</label>
+                <input type="text" id="contractAddressInput" placeholder="0x..." />
+            </div>
+            <button onclick="setContractAddress()">设置合约地址</button>
+        </div>
+
+        <!-- 查看节点信息 -->
+        <div class="section">
+            <h2>📊 节点信息</h2>
+            <div class="btn-group">
+                <button onclick="loadNodesInfo()">刷新节点信息</button>
+                <button onclick="loadContractBalance()">刷新合约余额</button>
+            </div>
+            <div id="nodesInfo" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- 节点价格管理 -->
+        <div class="section">
+            <h2>💰 节点价格管理</h2>
+            <div class="grid">
+                <div class="form-group">
+                    <label>节点类型</label>
+                    <select id="priceNodeLevel">
+                        <option value="1">神经节点 (NEURAL)</option>
+                        <option value="2">量子节点 (QUANTUM)</option>
+                        <option value="3">矩阵节点 (MATRIX)</option>
+                        <option value="4">创世节点 (GENESIS)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>新价格 (USDT)</label>
+                    <input type="number" id="newPrice" placeholder="1000" />
+                </div>
+            </div>
+            <button onclick="updateNodePrice()">更新价格</button>
+            <div id="priceResult"></div>
+        </div>
+
+        <!-- 节点限量管理 -->
+        <div class="section">
+            <h2>🎫 节点限量管理</h2>
+            <div class="grid">
+                <div class="form-group">
+                    <label>节点类型</label>
+                    <select id="limitNodeLevel">
+                        <option value="1">神经节点 (NEURAL)</option>
+                        <option value="2">量子节点 (QUANTUM)</option>
+                        <option value="3">矩阵节点 (MATRIX)</option>
+                        <option value="4">创世节点 (GENESIS)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>限量份数 (0表示无限制)</label>
+                    <input type="number" id="limitAmount" placeholder="1000" value="0" />
+                </div>
+            </div>
+            <button onclick="setNodeLimit()">设置限量</button>
+            <div id="limitResult"></div>
+        </div>
+
+        <!-- 假销量管理 -->
+        <div class="section">
+            <h2>📈 假销量管理</h2>
+            <p style="color: #666; margin-bottom: 15px;">💡 提示：直接设置假销量总数，不占用真实库存</p>
+            <div class="grid">
+                <div class="form-group">
+                    <label>节点类型</label>
+                    <select id="fakeSalesNodeLevel" onchange="showCurrentFakeSales()">
+                        <option value="1">神经节点 (NEURAL)</option>
+                        <option value="2">量子节点 (QUANTUM)</option>
+                        <option value="3">矩阵节点 (MATRIX)</option>
+                        <option value="4">创世节点 (GENESIS)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>设置假销量总数</label>
+                    <input type="number" id="fakeSalesAmount" placeholder="100" min="0" />
+                    <small id="currentFakeSales" style="color: #666; display: block; margin-top: 5px;"></small>
+                </div>
+            </div>
+            <button onclick="setFakeSales()">设置假销量</button>
+            <div id="fakeSalesResult"></div>
+        </div>
+
+        <!-- 特殊身份管理 -->
+        <div class="section">
+            <h2>⭐ 特殊身份管理</h2>
+            <div class="form-group">
+                <label>用户地址</label>
+                <input type="text" id="specialStatusAddress" placeholder="0x..." />
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select id="specialStatusValue">
+                    <option value="true">开启 (额外10%推荐奖励)</option>
+                    <option value="false">关闭</option>
+                </select>
+            </div>
+            <button onclick="setSpecialStatus()">设置特殊身份</button>
+            <div id="specialStatusResult"></div>
+        </div>
+
+        <!-- 批量特殊身份管理 -->
+        <div class="section">
+            <h2>⭐ 批量设置特殊身份</h2>
+            <div class="form-group">
+                <label>用户地址列表 (每行一个地址)</label>
+                <textarea id="batchSpecialAddresses" rows="5" placeholder="0x123...&#10;0x456...&#10;0x789..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select id="batchSpecialStatus">
+                    <option value="true">开启</option>
+                    <option value="false">关闭</option>
+                </select>
+            </div>
+            <button onclick="batchSetSpecialStatus()">批量设置</button>
+            <div id="batchSpecialResult"></div>
+        </div>
+
+        <!-- 接收地址管理 -->
+        <div class="section">
+            <h2>💳 接收地址管理</h2>
+            <button onclick="loadRecipients()" style="margin-bottom: 15px;">刷新接收地址与余额</button>
+            <div id="recipientsInfo"></div>
+
+            <div style="margin-top: 20px;">
+                <h3 style="color: #667eea; margin-bottom: 15px;">修改接收地址</h3>
+                <div class="grid">
+                    <div class="form-group">
+                        <label>地址编号</label>
+                        <select id="recipientIndex">
+                            <option value="1">地址1 (接收50%)</option>
+                            <option value="2">地址2 (接收10%)</option>
+                            <option value="3">地址3 (接收10%)</option>
+                            <option value="4">地址4 (接收10%)</option>
+                            <option value="5">地址5 (接收10%)</option>
+                            <option value="6">地址6 (接收10%)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>新地址</label>
+                        <input type="text" id="newRecipient" placeholder="0x..." />
+                    </div>
+                </div>
+                <button onclick="updateRecipient()">更新接收地址</button>
+                <div id="recipientResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 合约 ABI
+        const CONTRACT_ABI = [
+            "function updateNodePrice(uint8 level, uint256 newPrice) external",
+            "function batchUpdateNodePrices(uint8[] calldata levels, uint256[] calldata prices) external",
+            "function setNodeLimit(uint8 level, uint256 limit) external",
+            "function batchSetNodeLimits(uint8[] calldata levels, uint256[] calldata limits) external",
+            "function setFakeSales(uint8 level, uint256 amount) external",
+            "function setSpecialStatus(address user, bool status) external",
+            "function batchSetSpecialStatus(address[] calldata users, bool status) external",
+            "function updateRecipient(uint8 index, address newRecipient) external",
+            "function getAllNodesInfo() view returns (uint8[4], string[4], uint256[4], uint256[4], uint256[4], uint256[4], uint256[4], uint256[4])",
+            "function recipient1() view returns (address)",
+            "function recipient2() view returns (address)",
+            "function recipient3() view returns (address)",
+            "function recipient4() view returns (address)",
+            "function recipient5() view returns (address)",
+            "function recipient6() view returns (address)",
+            "function owner() view returns (address)",
+            "function usdt() view returns (address)"
+        ];
+
+        // ERC20 ABI (用于查询余额)
+        const ERC20_ABI = [
+            "function balanceOf(address account) view returns (uint256)",
+            "function symbol() view returns (string)",
+            "function decimals() view returns (uint8)"
+        ];
+
+        let provider;
+        let signer;
+        let contract;
+        let userAddress;
+
+        // 连接钱包
+        async function connectWallet() {
+            try {
+                if (typeof window.ethereum === 'undefined') {
+                    showError('请安装 MetaMask!');
+                    return;
+                }
+
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                signer = provider.getSigner();
+                userAddress = accounts[0];
+
+                document.getElementById('walletAddress').textContent =
+                    `已连接: ${userAddress.substring(0, 6)}...${userAddress.substring(38)}`;
+
+                showSuccess('钱包连接成功!');
+
+                // 如果已设置合约地址，初始化合约
+                const contractAddr = localStorage.getItem('contractAddress');
+                if (contractAddr) {
+                    document.getElementById('contractAddressInput').value = contractAddr;
+                    setContractAddress();
+                }
+            } catch (error) {
+                showError('连接钱包失败: ' + error.message);
+            }
+        }
+
+        // 设置合约地址
+        async function setContractAddress() {
+            const address = document.getElementById('contractAddressInput').value;
+            if (!ethers.utils.isAddress(address)) {
+                showError('无效的合约地址');
+                return;
+            }
+
+            localStorage.setItem('contractAddress', address);
+            document.getElementById('contractAddress').textContent =
+                `${address.substring(0, 6)}...${address.substring(38)}`;
+
+            if (signer) {
+                contract = new ethers.Contract(address, CONTRACT_ABI, signer);
+                showSuccess('合约地址设置成功!');
+                await loadContractBalance();
+                loadNodesInfo();
+                loadRecipients();
+            }
+        }
+
+        // 加载合约USDT余额
+        async function loadContractBalance() {
+            if (!contract) {
+                return;
+            }
+
+            try {
+                const usdtAddress = await contract.usdt();
+                const contractAddress = contract.address;
+                const usdtContract = new ethers.Contract(usdtAddress, ERC20_ABI, provider);
+                const balance = await usdtContract.balanceOf(contractAddress);
+                const balanceFormatted = ethers.utils.formatUnits(balance, 18);
+
+                document.getElementById('contractBalance').textContent =
+                    `合约余额: ${parseFloat(balanceFormatted).toFixed(2)} USDT`;
+            } catch (error) {
+                document.getElementById('contractBalance').textContent = '合约余额: 加载失败';
+            }
+        }
+
+        // 加载节点信息
+        async function loadNodesInfo() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            try {
+                const result = await contract.getAllNodesInfo();
+                const [levels, names, prices, limits, totalSales, realSales, fakeSales, remainingAmounts] = result;
+
+                // 保存到全局变量
+                currentNodesData = {
+                    levels,
+                    names,
+                    prices,
+                    limits,
+                    totalSales,
+                    realSales,
+                    fakeSales,
+                    remainingAmounts
+                };
+
+                const nodeNames = ['神经节点', '量子节点', '矩阵节点', '创世节点'];
+                let html = '';
+
+                for (let i = 0; i < 4; i++) {
+                    const priceInUsdt = ethers.utils.formatUnits(prices[i], 18);
+                    html += `
+                        <div class="node-info">
+                            <h3>${nodeNames[i]} (${names[i]})</h3>
+                            <p><strong>价格:</strong> ${priceInUsdt} USDT</p>
+                            <p><strong>限量:</strong> ${limits[i].toString() === '0' ? '无限制' : limits[i].toString()}</p>
+                            <p><strong>总销量:</strong> ${totalSales[i].toString()}</p>
+                            <p><strong>真实销量:</strong> ${realSales[i].toString()}</p>
+                            <p><strong>假销量:</strong> ${fakeSales[i].toString()}</p>
+                            <p><strong>剩余:</strong> ${remainingAmounts[i].toString()}</p>
+                        </div>
+                    `;
+                }
+
+                document.getElementById('nodesInfo').innerHTML = html;
+
+                // 更新当前假销量显示
+                showCurrentFakeSales();
+            } catch (error) {
+                showError('加载节点信息失败: ' + error.message);
+            }
+        }
+
+        // 更新节点价格
+        async function updateNodePrice() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const level = document.getElementById('priceNodeLevel').value;
+            const price = document.getElementById('newPrice').value;
+
+            if (!price || price <= 0) {
+                showError('请输入有效的价格');
+                return;
+            }
+
+            try {
+                showLoading('priceResult');
+                // USDT 18位小数
+                const priceInWei = ethers.utils.parseUnits(price, 18);
+                const tx = await contract.updateNodePrice(level, priceInWei);
+                await tx.wait();
+
+                showSuccess('价格更新成功! 交易哈希: ' + tx.hash, 'priceResult');
+                loadNodesInfo();
+                loadContractBalance();
+            } catch (error) {
+                showError('更新价格失败: ' + error.message, 'priceResult');
+            }
+        }
+
+        // 设置节点限量
+        async function setNodeLimit() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const level = document.getElementById('limitNodeLevel').value;
+            const limit = document.getElementById('limitAmount').value;
+
+            try {
+                showLoading('limitResult');
+                const tx = await contract.setNodeLimit(level, limit);
+                await tx.wait();
+
+                showSuccess('限量设置成功! 交易哈希: ' + tx.hash, 'limitResult');
+                loadNodesInfo();
+            } catch (error) {
+                showError('设置限量失败: ' + error.message, 'limitResult');
+            }
+        }
+
+        // 全局变量存储节点数据
+        let currentNodesData = null;
+
+        // 显示当前假销量
+        function showCurrentFakeSales() {
+            if (!currentNodesData) {
+                return;
+            }
+
+            const level = parseInt(document.getElementById('fakeSalesNodeLevel').value);
+            const levelIndex = level - 1; // level 从1开始，数组从0开始
+            const currentFake = currentNodesData.fakeSales[levelIndex];
+
+            document.getElementById('currentFakeSales').textContent =
+                `当前假销量: ${currentFake.toString()}`;
+        }
+
+        // 设置假销量（直接设置总数）
+        async function setFakeSales() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const level = parseInt(document.getElementById('fakeSalesNodeLevel').value);
+            const targetAmount = document.getElementById('fakeSalesAmount').value;
+
+            if (!targetAmount || targetAmount < 0) {
+                showError('请输入有效的数量');
+                return;
+            }
+
+            try {
+                // 获取当前假销量用于显示
+                let currentFake = 0;
+                if (currentNodesData) {
+                    const levelIndex = level - 1;
+                    currentFake = parseInt(currentNodesData.fakeSales[levelIndex].toString());
+                }
+
+                showLoading('fakeSalesResult');
+                const tx = await contract.setFakeSales(level, targetAmount);
+                await tx.wait();
+
+                showSuccess(`假销量设置成功! ${currentFake > 0 ? `从 ${currentFake} 更新到 ${targetAmount}` : `设置为 ${targetAmount}`}。交易哈希: ${tx.hash}`, 'fakeSalesResult');
+                await loadNodesInfo();
+                showCurrentFakeSales();
+            } catch (error) {
+                showError('设置假销量失败: ' + error.message, 'fakeSalesResult');
+            }
+        }
+
+        // 设置特殊身份
+        async function setSpecialStatus() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const address = document.getElementById('specialStatusAddress').value;
+            const status = document.getElementById('specialStatusValue').value === 'true';
+
+            if (!ethers.utils.isAddress(address)) {
+                showError('无效的地址');
+                return;
+            }
+
+            try {
+                showLoading('specialStatusResult');
+                const tx = await contract.setSpecialStatus(address, status);
+                await tx.wait();
+
+                showSuccess('特殊身份设置成功! 交易哈希: ' + tx.hash, 'specialStatusResult');
+            } catch (error) {
+                showError('设置特殊身份失败: ' + error.message, 'specialStatusResult');
+            }
+        }
+
+        // 批量设置特殊身份
+        async function batchSetSpecialStatus() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const addressesText = document.getElementById('batchSpecialAddresses').value;
+            const status = document.getElementById('batchSpecialStatus').value === 'true';
+
+            const addresses = addressesText.split('\n')
+                .map(addr => addr.trim())
+                .filter(addr => addr.length > 0);
+
+            if (addresses.length === 0) {
+                showError('请输入至少一个地址');
+                return;
+            }
+
+            // 验证所有地址
+            for (let addr of addresses) {
+                if (!ethers.utils.isAddress(addr)) {
+                    showError('无效的地址: ' + addr);
+                    return;
+                }
+            }
+
+            try {
+                showLoading('batchSpecialResult');
+                const tx = await contract.batchSetSpecialStatus(addresses, status);
+                await tx.wait();
+
+                showSuccess(`批量设置成功! 共处理 ${addresses.length} 个地址。交易哈希: ${tx.hash}`, 'batchSpecialResult');
+            } catch (error) {
+                showError('批量设置失败: ' + error.message, 'batchSpecialResult');
+            }
+        }
+
+        // 加载接收地址
+        async function loadRecipients() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            try {
+                // 获取USDT合约地址
+                const usdtAddress = await contract.usdt();
+                const usdtContract = new ethers.Contract(usdtAddress, ERC20_ABI, provider);
+
+                // 获取所有接收地址
+                const recipients = [];
+                for (let i = 1; i <= 6; i++) {
+                    const addr = await contract[`recipient${i}`]();
+                    recipients.push(addr);
+                }
+
+                // 获取所有接收地址的USDT余额
+                const balances = [];
+                for (let i = 0; i < 6; i++) {
+                    const balance = await usdtContract.balanceOf(recipients[i]);
+                    balances.push(balance);
+                }
+
+                let html = '<div class="recipients-grid">';
+                for (let i = 0; i < 6; i++) {
+                    const percentage = i === 0 ? '50%' : '10%';
+                    const balanceFormatted = ethers.utils.formatUnits(balances[i], 18);
+                    html += `
+                        <div class="recipient-item">
+                            <h4>地址${i + 1} (${percentage})</h4>
+                            <p style="margin-bottom: 8px;">${recipients[i]}</p>
+                            <p style="color: #667eea; font-weight: 600;">余额: ${parseFloat(balanceFormatted).toFixed(2)} USDT</p>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+
+                document.getElementById('recipientsInfo').innerHTML = html;
+            } catch (error) {
+                showError('加载接收地址失败: ' + error.message);
+            }
+        }
+
+        // 更新接收地址
+        async function updateRecipient() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const index = document.getElementById('recipientIndex').value;
+            const newAddr = document.getElementById('newRecipient').value;
+
+            if (!ethers.utils.isAddress(newAddr)) {
+                showError('无效的地址');
+                return;
+            }
+
+            try {
+                showLoading('recipientResult');
+                const tx = await contract.updateRecipient(index, newAddr);
+                await tx.wait();
+
+                showSuccess('接收地址更新成功! 交易哈希: ' + tx.hash, 'recipientResult');
+                await loadRecipients();
+            } catch (error) {
+                showError('更新接收地址失败: ' + error.message, 'recipientResult');
+            }
+        }
+
+        // 工具函数
+        function showSuccess(message, elementId = null) {
+            const html = `<div class="success">✅ ${message}</div>`;
+            if (elementId) {
+                document.getElementById(elementId).innerHTML = html;
+            } else {
+                alert(message);
+            }
+        }
+
+        function showError(message, elementId = null) {
+            const html = `<div class="error">❌ ${message}</div>`;
+            if (elementId) {
+                document.getElementById(elementId).innerHTML = html;
+            } else {
+                alert(message);
+            }
+        }
+
+        function showLoading(elementId) {
+            document.getElementById(elementId).innerHTML =
+                '<div class="loading">⏳ 交易处理中，请稍候...</div>';
+        }
+
+        // 页面加载时检查钱包连接
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                // 检查是否已经连接
+                const accounts = await window.ethereum.request({
+                    method: 'eth_accounts'
+                });
+                if (accounts.length > 0) {
+                    connectWallet();
+                }
+
+                // 监听账户变化
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    if (accounts.length > 0) {
+                        connectWallet();
+                    } else {
+                        location.reload();
+                    }
+                });
+
+                // 监听网络变化
+                window.ethereum.on('chainChanged', () => {
+                    location.reload();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

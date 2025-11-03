@@ -1,0 +1,116 @@
+.mainBtn{
+    background: $main-color;
+    height: 72px;
+    border-radius: 36px;
+    text-align: center;
+    line-height: 72px;
+    color: 26px;
+    font-weight: bold;
+    color: #1B1B1E;
+}
+.disableBtn{
+    background-color: #FFFFFF33;
+    height: 72px;
+    border-radius: 36px;
+    text-align: center;
+    line-height: 72px;
+    color: 26px;
+    font-weight: bold;
+    color: #999999;
+}
+.mainCard{
+    border: 1px solid #FFFFFF29;
+    background-color: #3030304D;
+    padding: 30px;
+    border-radius: 20px;
+}
+.fullPage{
+    width: 100vw;
+    min-height: calc(100vh - 100px);
+}
+
+.aniRotate {
+    animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.node {
+    border-radius: 20px;
+    background: linear-gradient(52deg, #31303A4D, #100E1D4D);
+    padding: 40px 30px;
+    position: relative;
+    .nftimg{
+        width: 140px;
+        height: 140px;
+        border-radius: 16px;
+        position: absolute;
+        top: -30px;
+        left: 30px;
+        z-index: 1;
+    }
+}
+
+.btn {
+    @include linear;
+    height: 60px;
+    border-radius: 30px;
+    line-height: 60px;
+    font-size: 24px;
+    color: #000000;
+    padding: 0 30px;
+    position: relative;
+    z-index: 5;
+}
+
+.icon{
+    animation: swordSwing 5s ease-in-out infinite;
+}
+@keyframes swordSwing {
+    0%, 50%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(20deg);
+    }
+    75% {
+        transform: rotate(20deg);
+    }
+}
+.crow{
+    animation: crowScale 5s ease-in-out infinite;
+}
+@keyframes crowScale {
+    0%, 50%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.2);
+    }
+    75% {
+        transform: scale(1.3);
+    }
+}
+
+@keyframes roleAni {
+  0%, 100% {
+    transform: scaleX(1);
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleX(1.06);
+    transform: scaleY(1.02);
+  }
+}
+
+.roleAni {
+  transform-origin: center bottom;
+  animation: roleAni 1.5s ease-in-out infinite;
+}
