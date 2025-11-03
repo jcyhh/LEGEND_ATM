@@ -86,7 +86,7 @@
             <div class="flex jb ac">
                 <van-icon name="cross" color="#0a0a0a" :size="30" />
                 <div class="size30 font2">{{ $t('Determine the inviter') }}</div>
-                <van-icon name="cross" :size="30" />
+                <van-icon name="cross" :size="30" @click="show=false" />
             </div>
 
             <div class="inp flex  mt60">
