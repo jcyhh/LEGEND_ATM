@@ -18,12 +18,19 @@
     <div class="gap100"></div>
 
     <RouterView></RouterView>
+
+    <div class="gap130"></div>
+    <div class="botBar flex jb ac">
+        <img src="@/assets/logo.png" class="img50">
+        <div class="main size24 font2">© Copyright {{ appName }} All rights reserved.</div>
+    </div>
 </template>
 
 <script setup lang="ts">
 import { useDappStore } from '@/store';
 import { storeToRefs } from 'pinia';
 import CusLang from '@/components/CusLang/index.vue'
+import { appName } from '@/config';
 
 const useStore = useDappStore()
 const { address } = storeToRefs(useStore)
@@ -65,5 +72,16 @@ const { address } = storeToRefs(useStore)
         background-color: rgba($main-color, $alpha: 0.1);
         border: 1px solid $main-color;
     }
+}
+.botBar{
+    width: 100vw;
+    height: 100px;
+    border-top: 1px solid $main-color;
+    padding: 0 30px;
+    background-color: #332a25;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
 }
 </style>

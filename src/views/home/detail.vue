@@ -44,7 +44,13 @@
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('Airdrop Allocation') }}</div>
-                <div class="size24 mt10">{{ $t('Receive free ATM tokens based on your node tier.') }}</div>
+                <div class="size24 mt10">
+                    <span>{{ $t('Token Reward') }}: </span>
+                    <span v-if="Number(nodeDetail[0])==1">1000U</span>
+                    <span v-if="Number(nodeDetail[0])==2">3000U</span>
+                    <span v-if="Number(nodeDetail[0])==3">5000U</span>
+                    <span v-if="Number(nodeDetail[0])==4">10000U</span>
+                </div>
             </div>
         </div>
 
@@ -52,7 +58,12 @@
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('Slippage Sharing') }}</div>
-                <div class="size24 mt10">{{ $t('Earn dividends from system slippage optimization.') }}</div>
+                <div class="size24 mt10">
+                    <span v-if="Number(nodeDetail[0])==1">1x</span>
+                    <span v-if="Number(nodeDetail[0])==2">1.2x</span>
+                    <span v-if="Number(nodeDetail[0])==3">1.6x</span>
+                    <span v-if="Number(nodeDetail[0])==4">2x</span>
+                </div>
             </div>
         </div>
 
@@ -60,7 +71,12 @@
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('Profit & Tax Sharing') }}</div>
-                <div class="size24 mt10">{{ $t('Share ecosystem profits and tax-based revenue streams.') }}</div>
+                <div class="size24 mt10">
+                    <span v-if="Number(nodeDetail[0])==1">1x</span>
+                    <span v-if="Number(nodeDetail[0])==2">1.2x</span>
+                    <span v-if="Number(nodeDetail[0])==3">1.6x</span>
+                    <span v-if="Number(nodeDetail[0])==4">2x</span>
+                </div>
             </div>
         </div>
 
@@ -68,17 +84,16 @@
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('Tier-Based Incentives') }}</div>
-                <div class="size24 mt10">{{ $t('Higher-tier nodes unlock greater rewards and privileges.') }}</div>
+                <div class="size24 mt10">
+                    <span v-if="Number(nodeDetail[0])==1">V2</span>
+                    <span v-if="Number(nodeDetail[0])==2">V3</span>
+                    <span v-if="Number(nodeDetail[0])==3">V4</span>
+                    <span v-if="Number(nodeDetail[0])==4">V5</span>
+                </div>
             </div>
         </div>
 
 
-    </div>
-
-    <div class="gap130"></div>
-    <div class="bot flex jb ac">
-        <img src="@/assets/logo.png" class="img50">
-        <div class="main size24 font2">© Copyright {{ appName }} All rights reserved.</div>
     </div>
 
     <van-popup v-model:show="show" style="background-color: transparent !important;">
@@ -100,7 +115,6 @@
 </template>
 
 <script setup lang="ts">
-import { appName } from '@/config';
 import { bigIntToSmall } from '@/config/dapp';
 import { useEthers } from '@/dapp';
 import { useDonation } from '@/dapp/contract/donation/useDonation';
@@ -329,16 +343,5 @@ const submitBuy = async () => {
     border-radius: 20px;
     padding: 30px;
     background-color: rgba($main-color, $alpha: 0.1);
-}
-.bot{
-    width: 100vw;
-    height: 100px;
-    border-top: 1px solid $main-color;
-    padding: 0 30px;
-    background-color: #332a25;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
 }
 </style>

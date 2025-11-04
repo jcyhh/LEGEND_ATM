@@ -45,16 +45,9 @@
 
     </div>
 
-    <div class="gap130"></div>
-    <div class="bot flex jb ac">
-        <img src="@/assets/logo.png" class="img50">
-        <div class="main size24 font2">© Copyright {{ appName }} All rights reserved.</div>
-    </div>
-
 </template>
 
 <script setup lang="ts">
-import { appName } from '@/config';
 import { bigIntToSmall, bigIntToNumber } from '@/config/dapp';
 import { useDonation } from '@/dapp/contract/donation/useDonation';
 import { t } from '@/locale';
@@ -239,16 +232,5 @@ const godetail = (data:any) => {
     border-radius: 20px;
     padding: 30px;
     background-color: rgba($main-color, $alpha: 0.1);
-}
-.bot{
-    width: 100vw;
-    height: 100px;
-    border-top: 1px solid $main-color;
-    padding: 0 30px;
-    background-color: #332a25;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
 }
 </style>
