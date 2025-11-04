@@ -35,13 +35,13 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('Airdrop Allocation') }}</div>
+                <div class="size30 font2 main">{{ $t('考核达标可得空投') }}</div>
                 <div class="size24 mt10">
-                    <span>{{ $t('Token Reward') }}: </span>
-                    <span v-if="Number(nodeInfo[0])==1">1000U</span>
-                    <span v-if="Number(nodeInfo[0])==2">3000U</span>
-                    <span v-if="Number(nodeInfo[0])==3">5000U</span>
-                    <span v-if="Number(nodeInfo[0])==4">10000U</span>
+                    <span v-if="Number(nodeInfo[0])==1">500</span>
+                    <span v-if="Number(nodeInfo[0])==2">1500</span>
+                    <span v-if="Number(nodeInfo[0])==3">3000</span>
+                    <span v-if="Number(nodeInfo[0])==4">8000</span>
+                     {{ $t('枚') }}
                 </div>
             </div>
         </div>
@@ -49,20 +49,7 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('Slippage Sharing') }}</div>
-                <div class="size24 mt10">
-                    <span v-if="Number(nodeInfo[0])==1">1x</span>
-                    <span v-if="Number(nodeInfo[0])==2">1.2x</span>
-                    <span v-if="Number(nodeInfo[0])==3">1.6x</span>
-                    <span v-if="Number(nodeInfo[0])==4">2x</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="card flex ac mb20">
-            <img src="@/assets/imgs/atm.png" class="picAtm">
-            <div class="ml20">
-                <div class="size30 font2 main">{{ $t('Profit & Tax Sharing') }}</div>
+                <div class="size30 font2 main">{{ $t('考核达标分红权重') }}</div>
                 <div class="size24 mt10">
                     <span v-if="Number(nodeInfo[0])==1">1x</span>
                     <span v-if="Number(nodeInfo[0])==2">1.2x</span>
@@ -75,12 +62,25 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('Tier-Based Incentives') }}</div>
+                <div class="size30 font2 main">{{ $t('3个月试用激励层') }}</div>
                 <div class="size24 mt10">
                     <span v-if="Number(nodeInfo[0])==1">V2</span>
                     <span v-if="Number(nodeInfo[0])==2">V3</span>
                     <span v-if="Number(nodeInfo[0])==3">V4</span>
                     <span v-if="Number(nodeInfo[0])==4">V5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card flex ac mb20">
+            <img src="@/assets/imgs/atm.png" class="picAtm">
+            <div class="ml20">
+                <div class="size30 font2 main">{{ $t('节点推荐激励') }}</div>
+                <div class="size24 mt10">
+                    <span v-if="Number(nodeInfo[0])==1">10%</span>
+                    <span v-if="Number(nodeInfo[0])==2">10%</span>
+                    <span v-if="Number(nodeInfo[0])==3">20%</span>
+                    <span v-if="Number(nodeInfo[0])==4">20%</span>
                 </div>
             </div>
         </div>

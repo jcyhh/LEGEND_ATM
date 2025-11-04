@@ -60,10 +60,10 @@ import { computed, ref, watch } from 'vue';
 const useStore = useAppStore()
 
 const rewards = [
-    { name:t('Airdrop Allocation') },
-    { name:t('Slippage Sharing') },
-    { name:`${t('Profit & Tax Sharing')}` },
-    { name:t('Tier-Based Incentives') }
+    { name:t('考核达标可得空投') },
+    { name:t('考核达标分红权重') },
+    { name:`${t('3个月试用激励层')}` },
+    { name:t('节点推荐激励') }
 ]
 
 const nodesList = ref<any>([])
