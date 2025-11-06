@@ -300,9 +300,10 @@
             <div id="fakeSalesResult"></div>
         </div>
 
-        <!-- 特殊身份管理 -->
+        <!-- 特殊身份管理（直推奖励加成） -->
         <div class="section">
-            <h2>⭐ 特殊身份管理</h2>
+            <h2>⭐ 特殊身份管理（直推奖励加成）</h2>
+            <p style="color: #666; margin-bottom: 15px;">💡 提示：特殊身份会增加推荐人的直推奖励比例</p>
             <div class="form-group">
                 <label>用户地址</label>
                 <input type="text" id="specialStatusAddress" placeholder="0x..." />
@@ -310,8 +311,9 @@
             <div class="form-group">
                 <label>状态</label>
                 <select id="specialStatusValue">
-                    <option value="true">开启 (额外10%推荐奖励)</option>
-                    <option value="false">关闭</option>
+                    <option value="0">NONE (无加成)</option>
+                    <option value="1">LEVEL1 (额外+5%)</option>
+                    <option value="2">LEVEL2 (额外+10%)</option>
                 </select>
             </div>
             <button onclick="setSpecialStatus()">设置特殊身份</button>
@@ -328,12 +330,64 @@
             <div class="form-group">
                 <label>状态</label>
                 <select id="batchSpecialStatus">
-                    <option value="true">开启</option>
-                    <option value="false">关闭</option>
+                    <option value="0">NONE (无加成)</option>
+                    <option value="1">LEVEL1 (额外+5%)</option>
+                    <option value="2">LEVEL2 (额外+10%)</option>
                 </select>
             </div>
             <button onclick="batchSetSpecialStatus()">批量设置</button>
             <div id="batchSpecialResult"></div>
+        </div>
+
+        <!-- 特殊成员管理 -->
+        <div class="section">
+            <h2>🌟 特殊成员管理（独立奖励系统）</h2>
+            <p style="color: #666; margin-bottom: 15px;">💡 提示：任何人下单时，会往上找60代内第一个特殊成员给予额外奖励（40%-直推奖励）。如果下单者自己是特殊成员，奖励给自己。</p>
+            <div class="form-group">
+                <label>用户地址</label>
+                <input type="text" id="specialMemberAddress" placeholder="0x..." />
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select id="specialMemberValue">
+                    <option value="true">开启（设为特殊成员）</option>
+                    <option value="false">关闭</option>
+                </select>
+            </div>
+            <button onclick="setSpecialMember()">设置特殊成员</button>
+            <div id="specialMemberResult"></div>
+        </div>
+
+        <!-- 批量特殊成员管理 -->
+        <div class="section">
+            <h2>🌟 批量设置特殊成员</h2>
+            <div class="form-group">
+                <label>用户地址列表 (每行一个地址)</label>
+                <textarea id="batchSpecialMemberAddresses" rows="5" placeholder="0x123...&#10;0x456...&#10;0x789..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select id="batchSpecialMemberStatus">
+                    <option value="true">开启</option>
+                    <option value="false">关闭</option>
+                </select>
+            </div>
+            <button onclick="batchSetSpecialMember()">批量设置</button>
+            <div id="batchSpecialMemberResult"></div>
+        </div>
+
+        <!-- 默认特殊奖励接收地址 -->
+        <div class="section">
+            <h2>💼 默认特殊奖励接收地址</h2>
+            <p style="color: #666; margin-bottom: 15px;">💡 提示：当找不到特殊成员上级时，特殊奖励将发送到此默认地址</p>
+            <button onclick="loadDefaultRecipient()" style="margin-bottom: 15px;">查看当前地址</button>
+            <div id="defaultRecipientInfo" style="margin-bottom: 15px;"></div>
+            <div class="form-group">
+                <label>新的默认接收地址</label>
+                <input type="text" id="newDefaultRecipient" placeholder="0x..." />
+            </div>
+            <button onclick="setDefaultSpecialRewardRecipient()">更新默认接收地址</button>
+            <div id="defaultRecipientResult"></div>
         </div>
 
         <!-- 接收地址管理 -->
@@ -350,10 +404,6 @@
                         <select id="recipientIndex">
                             <option value="1">地址1 (接收50%)</option>
                             <option value="2">地址2 (接收10%)</option>
-                            <option value="3">地址3 (接收10%)</option>
-                            <option value="4">地址4 (接收10%)</option>
-                            <option value="5">地址5 (接收10%)</option>
-                            <option value="6">地址6 (接收10%)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -375,16 +425,16 @@
             "function setNodeLimit(uint8 level, uint256 limit) external",
             "function batchSetNodeLimits(uint8[] calldata levels, uint256[] calldata limits) external",
             "function setFakeSales(uint8 level, uint256 amount) external",
-            "function setSpecialStatus(address user, bool status) external",
-            "function batchSetSpecialStatus(address[] calldata users, bool status) external",
+            "function setSpecialStatus(address user, uint8 status) external",
+            "function batchSetSpecialStatus(address[] calldata users, uint8 status) external",
+            "function setSpecialMember(address user, bool isMember) external",
+            "function batchSetSpecialMember(address[] calldata users, bool isMember) external",
+            "function setDefaultSpecialRewardRecipient(address newRecipient) external",
             "function updateRecipient(uint8 index, address newRecipient) external",
             "function getAllNodesInfo() view returns (uint8[4], string[4], uint256[4], uint256[4], uint256[4], uint256[4], uint256[4], uint256[4])",
             "function recipient1() view returns (address)",
             "function recipient2() view returns (address)",
-            "function recipient3() view returns (address)",
-            "function recipient4() view returns (address)",
-            "function recipient5() view returns (address)",
-            "function recipient6() view returns (address)",
+            "function defaultSpecialRewardRecipient() view returns (address)",
             "function owner() view returns (address)",
             "function usdt() view returns (address)"
         ];
@@ -451,6 +501,7 @@
                 await loadContractBalance();
                 loadNodesInfo();
                 loadRecipients();
+                loadDefaultRecipient();
             }
         }
 
@@ -628,7 +679,7 @@
             }
         }
 
-        // 设置特殊身份
+        // 设置特殊身份（直推奖励加成）
         async function setSpecialStatus() {
             if (!contract) {
                 showError('请先设置合约地址并连接钱包');
@@ -636,7 +687,7 @@
             }
 
             const address = document.getElementById('specialStatusAddress').value;
-            const status = document.getElementById('specialStatusValue').value === 'true';
+            const status = parseInt(document.getElementById('specialStatusValue').value);
 
             if (!ethers.utils.isAddress(address)) {
                 showError('无效的地址');
@@ -648,7 +699,8 @@
                 const tx = await contract.setSpecialStatus(address, status);
                 await tx.wait();
 
-                showSuccess('特殊身份设置成功! 交易哈希: ' + tx.hash, 'specialStatusResult');
+                const statusName = ['NONE', 'LEVEL1 (+5%)', 'LEVEL2 (+10%)'][status];
+                showSuccess(`特殊身份设置成功! 状态: ${statusName}。交易哈希: ${tx.hash}`, 'specialStatusResult');
             } catch (error) {
                 showError('设置特殊身份失败: ' + error.message, 'specialStatusResult');
             }
@@ -662,7 +714,7 @@
             }
 
             const addressesText = document.getElementById('batchSpecialAddresses').value;
-            const status = document.getElementById('batchSpecialStatus').value === 'true';
+            const status = parseInt(document.getElementById('batchSpecialStatus').value);
 
             const addresses = addressesText.split('\n')
                 .map(addr => addr.trim())
@@ -686,9 +738,135 @@
                 const tx = await contract.batchSetSpecialStatus(addresses, status);
                 await tx.wait();
 
-                showSuccess(`批量设置成功! 共处理 ${addresses.length} 个地址。交易哈希: ${tx.hash}`, 'batchSpecialResult');
+                const statusName = ['NONE', 'LEVEL1 (+5%)', 'LEVEL2 (+10%)'][status];
+                showSuccess(`批量设置成功! 共处理 ${addresses.length} 个地址，状态: ${statusName}。交易哈希: ${tx.hash}`, 'batchSpecialResult');
             } catch (error) {
                 showError('批量设置失败: ' + error.message, 'batchSpecialResult');
+            }
+        }
+
+        // 设置特殊成员
+        async function setSpecialMember() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const address = document.getElementById('specialMemberAddress').value;
+            const isMember = document.getElementById('specialMemberValue').value === 'true';
+
+            if (!ethers.utils.isAddress(address)) {
+                showError('无效的地址');
+                return;
+            }
+
+            try {
+                showLoading('specialMemberResult');
+                const tx = await contract.setSpecialMember(address, isMember);
+                await tx.wait();
+
+                showSuccess(`特殊成员设置成功! 状态: ${isMember ? '开启' : '关闭'}。交易哈希: ${tx.hash}`, 'specialMemberResult');
+            } catch (error) {
+                showError('设置特殊成员失败: ' + error.message, 'specialMemberResult');
+            }
+        }
+
+        // 批量设置特殊成员
+        async function batchSetSpecialMember() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const addressesText = document.getElementById('batchSpecialMemberAddresses').value;
+            const isMember = document.getElementById('batchSpecialMemberStatus').value === 'true';
+
+            const addresses = addressesText.split('\n')
+                .map(addr => addr.trim())
+                .filter(addr => addr.length > 0);
+
+            if (addresses.length === 0) {
+                showError('请输入至少一个地址');
+                return;
+            }
+
+            // 验证所有地址
+            for (let addr of addresses) {
+                if (!ethers.utils.isAddress(addr)) {
+                    showError('无效的地址: ' + addr);
+                    return;
+                }
+            }
+
+            try {
+                showLoading('batchSpecialMemberResult');
+                const tx = await contract.batchSetSpecialMember(addresses, isMember);
+                await tx.wait();
+
+                showSuccess(`批量设置成功! 共处理 ${addresses.length} 个地址，状态: ${isMember ? '开启' : '关闭'}。交易哈希: ${tx.hash}`, 'batchSpecialMemberResult');
+            } catch (error) {
+                showError('批量设置失败: ' + error.message, 'batchSpecialMemberResult');
+            }
+        }
+
+        // 加载默认特殊奖励接收地址
+        async function loadDefaultRecipient() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            try {
+                const address = await contract.defaultSpecialRewardRecipient();
+
+                let html = '';
+                if (address && address !== '0x0000000000000000000000000000000000000000') {
+                    // 获取该地址的USDT余额
+                    const usdtAddress = await contract.usdt();
+                    const usdtContract = new ethers.Contract(usdtAddress, ERC20_ABI, provider);
+                    const balance = await usdtContract.balanceOf(address);
+                    const balanceFormatted = ethers.utils.formatUnits(balance, 18);
+
+                    html = `
+                        <div class="node-info">
+                            <h3>当前默认接收地址</h3>
+                            <p><strong>地址:</strong> ${address}</p>
+                            <p><strong>USDT余额:</strong> ${parseFloat(balanceFormatted).toFixed(2)} USDT</p>
+                        </div>
+                    `;
+                } else {
+                    html = '<div class="error">⚠️ 尚未设置默认接收地址</div>';
+                }
+
+                document.getElementById('defaultRecipientInfo').innerHTML = html;
+            } catch (error) {
+                showError('加载默认接收地址失败: ' + error.message);
+            }
+        }
+
+        // 设置默认特殊奖励接收地址
+        async function setDefaultSpecialRewardRecipient() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const newAddr = document.getElementById('newDefaultRecipient').value;
+
+            if (!ethers.utils.isAddress(newAddr)) {
+                showError('无效的地址');
+                return;
+            }
+
+            try {
+                showLoading('defaultRecipientResult');
+                const tx = await contract.setDefaultSpecialRewardRecipient(newAddr);
+                await tx.wait();
+
+                showSuccess('默认接收地址更新成功! 交易哈希: ' + tx.hash, 'defaultRecipientResult');
+                await loadDefaultRecipient();
+            } catch (error) {
+                showError('更新默认接收地址失败: ' + error.message, 'defaultRecipientResult');
             }
         }
 
@@ -706,20 +884,20 @@
 
                 // 获取所有接收地址
                 const recipients = [];
-                for (let i = 1; i <= 6; i++) {
+                for (let i = 1; i <= 2; i++) {
                     const addr = await contract[`recipient${i}`]();
                     recipients.push(addr);
                 }
 
                 // 获取所有接收地址的USDT余额
                 const balances = [];
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 2; i++) {
                     const balance = await usdtContract.balanceOf(recipients[i]);
                     balances.push(balance);
                 }
 
                 let html = '<div class="recipients-grid">';
-                for (let i = 0; i < 6; i++) {
+                for (let i = 0; i < 2; i++) {
                     const percentage = i === 0 ? '50%' : '10%';
                     const balanceFormatted = ethers.utils.formatUnits(balances[i], 18);
                     html += `
