@@ -172,16 +172,24 @@ const loadData = async () => {
     id.value = Number(buyInfo[0])
     const isBind = await readIsBindReferral()
     hasBind.value = isBind
+    console.log('是否绑定',isBind);
+    
     if(!isBind){
+        console.log('是否有邀请码', refCode.value || '无邀请码');
+        
         if(refCode.value){
             const addr = refCode.value
             inviteAddress.value = addr
         }else{
             const addr = await readGetRootAddress()
             refAddress.value = addr
+            console.log('链上默认邀认地址',addr);
+            
             apiPost('/api/users/invite_code',{
                 address:addr
             }).then((res:any)=>{
+                console.log('链上地址的邀请码',res.referral_code);
+                
                 inviteAddress.value = res.referral_code
                 refCode.value = res.referral_code
             })
@@ -200,9 +208,15 @@ const buy = () => {
     submitBuy()
 }
 const submitBuy = async () => {
-    const res:any = await apiGet('/api/users/address',{
-        referral_code:refCode.value
-    })
+    let res:any;
+    if(inviteAddress.value){
+        res = await apiGet('/api/users/address',{
+            referral_code:inviteAddress.value
+        })
+    }
+
+    console.log('最终传给接口的地址', res.address || '0x0000000000000000000000000000000000000000');
+    
 
     if (!(await checkGas())) return;
 
