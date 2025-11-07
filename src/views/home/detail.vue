@@ -215,7 +215,7 @@ const submitBuy = async () => {
         })
     }
 
-    console.log('最终传给接口的地址', res.address || '0x0000000000000000000000000000000000000000');
+    console.log('最终传给接口的地址', res?.address || '0x0000000000000000000000000000000000000000');
     
 
     if (!(await checkGas())) return;
@@ -223,7 +223,7 @@ const submitBuy = async () => {
     console.log(bigIntToSmall(nodeDetail.value[2]));
     await approve(bigIntToSmall(nodeDetail.value[2]));
     
-    await writePurchaseNode(nodeDetail.value[0], res.address || '0x0000000000000000000000000000000000000000')
+    await writePurchaseNode(nodeDetail.value[0], res?.address || '0x0000000000000000000000000000000000000000')
 
     show.value = false
 
