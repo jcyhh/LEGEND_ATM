@@ -28,5 +28,14 @@
   "枚": "unidades",
   "考核达标分红权重": "Ponderación de dividendos por evaluación aprobada",
   "3个月试用激励层": "Capa de incentivos de prueba de 3 meses",
-  "节点推荐激励": "Incentivos de recomendación de nodos"
+  "节点推荐激励": "Incentivos de recomendación de nodos",
+  "地址": "Dirección",
+  "金额": "Cantidad",
+  "邀请列表": "Lista de Invitaciones",
+  "请输入邀请码": "Por favor ingrese el código de invitación",
+  "白名单额度": "Cuota de Lista Blanca",
+  "ATM空投激励": "Incentivo de Airdrop ATM",
+  "税费分红激励": "Incentivo de Impuestos y Dividendos",
+  "白名单额度激励": "Incentivo de Cuota de Lista Blanca",
+  "节点推广激励": "Incentivo de Promoción de Nodos"
 }

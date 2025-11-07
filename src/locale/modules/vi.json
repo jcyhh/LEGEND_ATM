@@ -28,5 +28,14 @@
   "枚": "đơn vị",
   "考核达标分红权重": "Trọng số cổ tức đạt tiêu chuẩn đánh giá",
   "3个月试用激励层": "Tầng khuyến khích dùng thử 3 tháng",
-  "节点推荐激励": "Khuyến khích giới thiệu Node"
+  "节点推荐激励": "Khuyến khích giới thiệu Node",
+  "地址": "Địa chỉ",
+  "金额": "Số tiền",
+  "邀请列表": "Danh sách Mời",
+  "请输入邀请码": "Vui lòng nhập mã mời",
+  "白名单额度": "Hạn mức Danh sách Trắng",
+  "ATM空投激励": "Khuyến khích Airdrop ATM",
+  "税费分红激励": "Khuyến khích Thuế & Cổ tức",
+  "白名单额度激励": "Khuyến khích Hạn mức Danh sách Trắng",
+  "节点推广激励": "Khuyến khích Quảng bá Node"
 }

@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { getToken, getAddress, delToken } from '../config/storage'
-import { langKey, addressKey, uploadApi, uploadFileName, timeOut, uploadTimeOut, type Api } from '../config/http'
-import { getHeaderLang } from '../locale'
+import { delToken } from '../config/storage'
+import { uploadApi, uploadFileName, timeOut, uploadTimeOut, type Api } from '../config/http'
 import { closeToast, showLoadingToast, showToast } from 'vant';
 import { router, routerPush } from '@/router';
 import { startPath } from '@/config/dapp';
@@ -17,9 +16,9 @@ service.interceptors.request.use(
         if (config.data instanceof FormData)config.timeout = uploadTimeOut
         else config.headers['Content-Type'] = "application/json; charset=UTF-8"
 
-        config.headers['Authorization'] = `Bearer ${getToken()}`
-        if(addressKey)config.headers[addressKey] = getAddress()
-        if(langKey)config.headers[langKey] = getHeaderLang()
+        // config.headers['Authorization'] = `Bearer ${getToken()}`
+        // if(addressKey)config.headers[addressKey] = getAddress()
+        // if(langKey)config.headers[langKey] = getHeaderLang()
         return config
     },
     error => Promise.reject(error)

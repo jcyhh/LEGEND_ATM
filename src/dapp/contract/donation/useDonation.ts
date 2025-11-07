@@ -27,6 +27,8 @@ export function useDonation (contractAddress: string = import.meta.env.VITE_DONA
         return await contract.getUserPurchaseDetails(getAddress());
     }
 
+    const readWhitelist = async () => await contract.whitelist(getAddress());
+
     // [写]购买节点
     const writePurchaseNode = async (...arg:any[]) => {
         console.log(arg);
@@ -50,6 +52,7 @@ export function useDonation (contractAddress: string = import.meta.env.VITE_DONA
         init,
         readGetAllNodesInfo,
         readGetUserPurchaseDetails,
+        readWhitelist,
         writePurchaseNode
     }
 }

@@ -239,10 +239,11 @@
                 <div class="form-group">
                     <label>节点类型</label>
                     <select id="priceNodeLevel">
-                        <option value="1">神经节点 (NEURAL)</option>
-                        <option value="2">量子节点 (QUANTUM)</option>
-                        <option value="3">矩阵节点 (MATRIX)</option>
-                        <option value="4">创世节点 (GENESIS)</option>
+                        <option value="1">轻量节点 (LITE)</option>
+                        <option value="2">神经节点 (NEURAL)</option>
+                        <option value="3">量子节点 (QUANTUM)</option>
+                        <option value="4">矩阵节点 (MATRIX)</option>
+                        <option value="5">创世节点 (GENESIS)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -261,10 +262,11 @@
                 <div class="form-group">
                     <label>节点类型</label>
                     <select id="limitNodeLevel">
-                        <option value="1">神经节点 (NEURAL)</option>
-                        <option value="2">量子节点 (QUANTUM)</option>
-                        <option value="3">矩阵节点 (MATRIX)</option>
-                        <option value="4">创世节点 (GENESIS)</option>
+                        <option value="1">轻量节点 (LITE)</option>
+                        <option value="2">神经节点 (NEURAL)</option>
+                        <option value="3">量子节点 (QUANTUM)</option>
+                        <option value="4">矩阵节点 (MATRIX)</option>
+                        <option value="5">创世节点 (GENESIS)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -284,10 +286,11 @@
                 <div class="form-group">
                     <label>节点类型</label>
                     <select id="fakeSalesNodeLevel" onchange="showCurrentFakeSales()">
-                        <option value="1">神经节点 (NEURAL)</option>
-                        <option value="2">量子节点 (QUANTUM)</option>
-                        <option value="3">矩阵节点 (MATRIX)</option>
-                        <option value="4">创世节点 (GENESIS)</option>
+                        <option value="1">轻量节点 (LITE)</option>
+                        <option value="2">神经节点 (NEURAL)</option>
+                        <option value="3">量子节点 (QUANTUM)</option>
+                        <option value="4">矩阵节点 (MATRIX)</option>
+                        <option value="5">创世节点 (GENESIS)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -390,6 +393,43 @@
             <div id="defaultRecipientResult"></div>
         </div>
 
+        <!-- 白名单管理 -->
+        <div class="section">
+            <h2>📋 白名单管理</h2>
+            <p style="color: #666; margin-bottom: 15px;">💡 提示：只有白名单中的用户才能购买节点</p>
+            <div class="form-group">
+                <label>用户地址</label>
+                <input type="text" id="whitelistAddress" placeholder="0x..." />
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select id="whitelistValue">
+                    <option value="true">加入白名单</option>
+                    <option value="false">移出白名单</option>
+                </select>
+            </div>
+            <button onclick="setWhitelist()">设置白名单</button>
+            <div id="whitelistResult"></div>
+        </div>
+
+        <!-- 批量白名单管理 -->
+        <div class="section">
+            <h2>📋 批量设置白名单</h2>
+            <div class="form-group">
+                <label>用户地址列表 (每行一个地址)</label>
+                <textarea id="batchWhitelistAddresses" rows="5" placeholder="0x123...&#10;0x456...&#10;0x789..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>状态</label>
+                <select id="batchWhitelistStatus">
+                    <option value="true">加入白名单</option>
+                    <option value="false">移出白名单</option>
+                </select>
+            </div>
+            <button onclick="batchSetWhitelist()">批量设置</button>
+            <div id="batchWhitelistResult"></div>
+        </div>
+
         <!-- 接收地址管理 -->
         <div class="section">
             <h2>💳 接收地址管理</h2>
@@ -430,11 +470,14 @@
             "function setSpecialMember(address user, bool isMember) external",
             "function batchSetSpecialMember(address[] calldata users, bool isMember) external",
             "function setDefaultSpecialRewardRecipient(address newRecipient) external",
+            "function setWhitelist(address user, bool isWhitelisted) external",
+            "function batchSetWhitelist(address[] calldata users, bool isWhitelisted) external",
             "function updateRecipient(uint8 index, address newRecipient) external",
-            "function getAllNodesInfo() view returns (uint8[4], string[4], uint256[4], uint256[4], uint256[4], uint256[4], uint256[4], uint256[4])",
+            "function getAllNodesInfo() view returns (uint8[5], string[5], uint256[5], uint256[5], uint256[5], uint256[5], uint256[5], uint256[5])",
             "function recipient1() view returns (address)",
             "function recipient2() view returns (address)",
             "function defaultSpecialRewardRecipient() view returns (address)",
+            "function whitelist(address user) view returns (bool)",
             "function owner() view returns (address)",
             "function usdt() view returns (address)"
         ];
@@ -548,10 +591,10 @@
                     remainingAmounts
                 };
 
-                const nodeNames = ['神经节点', '量子节点', '矩阵节点', '创世节点'];
+                const nodeNames = ['轻量节点', '神经节点', '量子节点', '矩阵节点', '创世节点'];
                 let html = '';
 
-                for (let i = 0; i < 4; i++) {
+                for (let i = 0; i < 5; i++) {
                     const priceInUsdt = ethers.utils.formatUnits(prices[i], 18);
                     html += `
                         <div class="node-info">
@@ -940,6 +983,70 @@
                 await loadRecipients();
             } catch (error) {
                 showError('更新接收地址失败: ' + error.message, 'recipientResult');
+            }
+        }
+
+        // 设置白名单
+        async function setWhitelist() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const address = document.getElementById('whitelistAddress').value;
+            const isWhitelisted = document.getElementById('whitelistValue').value === 'true';
+
+            if (!ethers.utils.isAddress(address)) {
+                showError('无效的地址');
+                return;
+            }
+
+            try {
+                showLoading('whitelistResult');
+                const tx = await contract.setWhitelist(address, isWhitelisted);
+                await tx.wait();
+
+                showSuccess(`白名单设置成功! 状态: ${isWhitelisted ? '已加入' : '已移出'}。交易哈希: ${tx.hash}`, 'whitelistResult');
+            } catch (error) {
+                showError('设置白名单失败: ' + error.message, 'whitelistResult');
+            }
+        }
+
+        // 批量设置白名单
+        async function batchSetWhitelist() {
+            if (!contract) {
+                showError('请先设置合约地址并连接钱包');
+                return;
+            }
+
+            const addressesText = document.getElementById('batchWhitelistAddresses').value;
+            const isWhitelisted = document.getElementById('batchWhitelistStatus').value === 'true';
+
+            const addresses = addressesText.split('\n')
+                .map(addr => addr.trim())
+                .filter(addr => addr.length > 0);
+
+            if (addresses.length === 0) {
+                showError('请输入至少一个地址');
+                return;
+            }
+
+            // 验证所有地址
+            for (let addr of addresses) {
+                if (!ethers.utils.isAddress(addr)) {
+                    showError('无效的地址: ' + addr);
+                    return;
+                }
+            }
+
+            try {
+                showLoading('batchWhitelistResult');
+                const tx = await contract.batchSetWhitelist(addresses, isWhitelisted);
+                await tx.wait();
+
+                showSuccess(`批量设置成功! 共处理 ${addresses.length} 个地址，状态: ${isWhitelisted ? '已加入' : '已移出'}。交易哈希: ${tx.hash}`, 'batchWhitelistResult');
+            } catch (error) {
+                showError('批量设置失败: ' + error.message, 'batchWhitelistResult');
             }
         }
 

@@ -45,10 +45,11 @@
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('考核达标可得空投') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeDetail[0])==1">500</span>
-                    <span v-if="Number(nodeDetail[0])==2">1500</span>
-                    <span v-if="Number(nodeDetail[0])==3">3000</span>
-                    <span v-if="Number(nodeDetail[0])==4">8000</span>
+                    <span v-if="Number(nodeDetail[0])==1">0</span>
+                    <span v-if="Number(nodeDetail[0])==2">500</span>
+                    <span v-if="Number(nodeDetail[0])==3">1500</span>
+                    <span v-if="Number(nodeDetail[0])==4">3000</span>
+                    <span v-if="Number(nodeDetail[0])==5">8000</span>
                      {{ $t('枚') }}
                 </div>
             </div>
@@ -59,10 +60,11 @@
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('考核达标分红权重') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeDetail[0])==1">1x</span>
-                    <span v-if="Number(nodeDetail[0])==2">1.2x</span>
-                    <span v-if="Number(nodeDetail[0])==3">1.6x</span>
-                    <span v-if="Number(nodeDetail[0])==4">2x</span>
+                    <span v-if="Number(nodeDetail[0])==1">0</span>
+                    <span v-if="Number(nodeDetail[0])==2">1x</span>
+                    <span v-if="Number(nodeDetail[0])==3">1.2x</span>
+                    <span v-if="Number(nodeDetail[0])==4">1.6x</span>
+                    <span v-if="Number(nodeDetail[0])==5">2x</span>
                 </div>
             </div>
         </div>
@@ -70,12 +72,13 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('3个月试用激励层') }}</div>
+                <div class="size30 font2 main">{{ $t('白名单额度') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeDetail[0])==1">V2</span>
-                    <span v-if="Number(nodeDetail[0])==2">V3</span>
-                    <span v-if="Number(nodeDetail[0])==3">V4</span>
-                    <span v-if="Number(nodeDetail[0])==4">V5</span>
+                    <span v-if="Number(nodeDetail[0])==1">0</span>
+                    <span v-if="Number(nodeDetail[0])==2">50</span>
+                    <span v-if="Number(nodeDetail[0])==3">180</span>
+                    <span v-if="Number(nodeDetail[0])==4">400</span>
+                    <span v-if="Number(nodeDetail[0])==5">1000</span>
                 </div>
             </div>
         </div>
@@ -85,10 +88,11 @@
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('节点推荐激励') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeDetail[0])==1">10%</span>
+                    <span v-if="Number(nodeDetail[0])==1">0</span>
                     <span v-if="Number(nodeDetail[0])==2">10%</span>
-                    <span v-if="Number(nodeDetail[0])==3">20%</span>
+                    <span v-if="Number(nodeDetail[0])==3">10%</span>
                     <span v-if="Number(nodeDetail[0])==4">20%</span>
+                    <span v-if="Number(nodeDetail[0])==5">20%</span>
                 </div>
             </div>
         </div>
@@ -105,7 +109,7 @@
             </div>
 
             <div class="inp flex  mt60">
-                <input type="text" v-model="inviteAddress" :placeholder="$t(`Please enter the inviter's address`)" class="flex1 size26">
+                <input type="text" v-model="inviteAddress" :placeholder="$t('请输入邀请码')" class="flex1 size26">
             </div>
 
             <div class="popbtn mt60 font2 size28" @click="buy">{{ $t('Sure') }}</div>
@@ -125,6 +129,7 @@ import { routerReplace } from '@/router';
 import { useAppStore, useDappStore } from '@/store';
 import { computedDiv } from '@/utils';
 import { message } from '@/utils/message';
+import { apiGet, apiPost } from '@/utils/request';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 
@@ -142,7 +147,7 @@ const nodeProgress = computed(()=>{
 })
 
 const dappStore = useDappStore()
-const { address, refAddress } = storeToRefs(dappStore)
+const { address, refCode, refAddress } = storeToRefs(dappStore)
 
 const { checkGas } = useEthers()
 const { init:initErc20, approve } = useErc20(import.meta.env.VITE_DONATION)
@@ -168,13 +173,18 @@ const loadData = async () => {
     const isBind = await readIsBindReferral()
     hasBind.value = isBind
     if(!isBind){
-        if(refAddress.value){
-            const addr = refAddress.value
+        if(refCode.value){
+            const addr = refCode.value
             inviteAddress.value = addr
         }else{
             const addr = await readGetRootAddress()
-            inviteAddress.value = addr
             refAddress.value = addr
+            apiPost('/api/users/invite_code',{
+                address:addr
+            }).then((res:any)=>{
+                inviteAddress.value = res.referral_code
+                refCode.value = res.referral_code
+            })
         }
     }
 }
@@ -190,12 +200,16 @@ const buy = () => {
     submitBuy()
 }
 const submitBuy = async () => {
+    const res:any = await apiGet('/api/users/address',{
+        referral_code:refCode.value
+    })
+
     if (!(await checkGas())) return;
 
     console.log(bigIntToSmall(nodeDetail.value[2]));
     await approve(bigIntToSmall(nodeDetail.value[2]));
     
-    await writePurchaseNode(nodeDetail.value[0], inviteAddress.value || '0x0000000000000000000000000000000000000000')
+    await writePurchaseNode(nodeDetail.value[0], res.address || '0x0000000000000000000000000000000000000000')
 
     show.value = false
 
@@ -228,7 +242,7 @@ const submitBuy = async () => {
 .bg{
     width: 100vw;
     height: auto;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
 }

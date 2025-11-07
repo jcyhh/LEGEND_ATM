@@ -24,9 +24,9 @@
                         <div class="font2 mt5">$<span v-init="bigIntToSmall(item[2])"></span></div>
                     </div>
                 </div>
-                <div class="flex jb ac pt10 pb20 font2">
-                    <div class="buy size20 flex jc ac">{{ item[4] > item[3] ? item[3] : item[4] }} / {{ item[3] }}</div>
-                    <div class="buy size20 flex jc ac" @click="godetail(item)">{{ $t('Buy Now') }}</div>
+                <div class="flex jb ac pt10 pb20 font2 nodeCont">
+                    <div class="buy size20 flex jc ac flex0">{{ item[4] > item[3] ? item[3] : item[4] }} / {{ item[3] }}</div>
+                    <div class="buy size20 flex jc ac line1 lh40" @click="godetail(item)">{{ $t('Buy Now') }}</div>
                 </div>
             </div>
 
@@ -60,10 +60,10 @@ import { computed, ref, watch } from 'vue';
 const useStore = useAppStore()
 
 const rewards = [
-    { name:t('考核达标可得空投') },
-    { name:t('考核达标分红权重') },
-    { name:`${t('3个月试用激励层')}` },
-    { name:t('节点推荐激励') }
+    { name:t('ATM空投激励') },
+    { name:t('税费分红激励') },
+    { name:`${t('白名单额度激励')}` },
+    { name:t('节点推广激励') }
 ]
 
 const nodesList = ref<any>([])
@@ -71,7 +71,7 @@ const nodesList = ref<any>([])
 const dappStore = useDappStore()
 const { address } = storeToRefs(dappStore)
 
-const { init:initDonation, readGetAllNodesInfo } = useDonation()
+const { init:initDonation, readGetAllNodesInfo, readWhitelist } = useDonation()
 
 watch(address, async val => {
     if(val){
@@ -81,15 +81,17 @@ watch(address, async val => {
 },{immediate:true})
 
 const loadData = async () => {
+    const isShowFirst = await readWhitelist()
+    console.log(isShowFirst);
     const nodes = await readGetAllNodesInfo()
-    const groupedArrays: any[][] = []
-    if (nodes && nodes.length > 0 && nodes[0].length === 4) {
+    let groupedArrays: any[][] = []
+    if (nodes && nodes.length > 0 && nodes[0].length === 5) {
         // 假设每个子数组都有4个值
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             groupedArrays.push(nodes.map((arr: any[]) => arr[i]))
         }
     }
-    nodesList.value = groupedArrays
+    nodesList.value = isShowFirst ? groupedArrays : groupedArrays.slice(1)
     console.log(nodesList.value);
 }
 
@@ -149,7 +151,7 @@ const godetail = (data:any) => {
 .bg{
     width: 100vw;
     height: auto;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
 }
@@ -200,6 +202,9 @@ const godetail = (data:any) => {
             width: 80px;
             height: auto;
         }
+    }
+    .nodeCont{
+        width: 300px;
     }
     .buy{
         height: 40px;

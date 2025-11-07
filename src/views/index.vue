@@ -13,27 +13,32 @@
 
 <script setup lang="ts">
 import { homePath } from '@/config/dapp';
+import { getAddress } from '@/config/storage';
 import { useEthers } from '@/dapp';
 import { useDonation } from '@/dapp/contract/donation/useDonation';
 import { routerReplace } from '@/router';
 import { useDappStore } from '@/store';
+import { apiPost } from '@/utils/request';
 import { storeToRefs } from 'pinia';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const { query } = useRoute()
-console.log(query);
-
 
 const { connectWallet } = useEthers()
 
 const dappStore = useDappStore()
-const { address, hasMetaMask, refAddress } = storeToRefs(dappStore)
+const { address, hasMetaMask, refAddress, refCode, userCode } = storeToRefs(dappStore)
 
 const { init:initDonation, readGetUserPurchaseDetails } = useDonation()
 
-if(query.ref)refAddress.value = query.ref as string
-else refAddress.value = ''
+if(query.ref){
+    refCode.value = query.ref as string
+    dappStore.getInviterInfo()
+}else{
+    refAddress.value = ''
+    refCode.value = ''
+}
 
 // 当钱包对象异步注入到浏览器后，钱包登录 或者 去首页
 watch(address, async (val)=>{

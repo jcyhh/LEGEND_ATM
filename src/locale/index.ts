@@ -13,6 +13,8 @@ import viCommon from './common/vi.json';
 import thCommon from './common/th.json';
 import itCommon from './common/it.json';
 import ruCommon from './common/ru.json';
+import frCommon from './common/fr.json';
+import maCommon from './common/ma.json';
 
 import en from './modules/en.json';
 import ko from './modules/ko.json';
@@ -26,6 +28,8 @@ import vi from './modules/vi.json';
 import th from './modules/th.json';
 import it from './modules/it.json';
 import ru from './modules/ru.json';
+import fr from './modules/fr.json';
+import ma from './modules/ma.json';
 
 const messages = {
     en: {...en, ...enCommon},
@@ -39,7 +43,9 @@ const messages = {
     vi: {...vi, ...viCommon},
     th: {...th, ...thCommon},
     it: {...it, ...itCommon},
-    ru: {...ru, ...ruCommon}
+    ru: {...ru, ...ruCommon},
+    fr: {...fr, ...frCommon},
+    ma: {...ma, ...maCommon}
 }
 
 

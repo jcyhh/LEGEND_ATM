@@ -28,5 +28,14 @@
   "枚": "units",
   "考核达标分红权重": "Assessment-passed dividend weight",
   "3个月试用激励层": "3-month trial incentive tier",
-  "节点推荐激励": "Node referral incentives"
+  "节点推荐激励": "Node referral incentives",
+  "地址": "Address",
+  "金额": "Amount",
+  "邀请列表": "Invitation List",
+  "请输入邀请码": "Please enter invitation code",
+  "白名单额度": "Whitelist Quota",
+  "ATM空投激励": "ATM Airdrop Incentive",
+  "税费分红激励": "Tax & Dividend Incentive",
+  "白名单额度激励": "Whitelist Quota Incentive",
+  "节点推广激励": "Node Promotion Incentive"
 }

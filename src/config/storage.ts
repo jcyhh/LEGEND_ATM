@@ -10,7 +10,7 @@ const accountKey: string = 'ACCOUNT' // 存储登入账户的KEY
 
 // 存储多语言
 export const setLang = (data: string): void => localStorage.setItem(langKey, data)
-export const getLang = (): string => localStorage.getItem(langKey) || (import.meta.env.PROD ? 'en' : 'zh')
+export const getLang = (): string => localStorage.getItem(langKey) || 'en'
 export const delLang = (): void => localStorage.removeItem(langKey)
 
 // 存储钱包地址

@@ -1,5 +1,6 @@
 <template>
-    <div class="head headGlass flex jb ac">
+    <div class="appDiv">
+<div class="head headGlass flex jb ac">
 
         <img src="@/assets/layout/logo.png" class="logo">
 
@@ -19,11 +20,13 @@
 
     <RouterView></RouterView>
 
-    <!-- <div class="gap130"></div> -->
+    <div class="gap130"></div>
     <div class="botBar flex jb ac">
         <img src="@/assets/logo.png" class="img50">
         <div class="main size24 font2">© Copyright {{ appName }} All rights reserved.</div>
     </div>
+    </div>
+    
 </template>
 
 <script setup lang="ts">
@@ -37,6 +40,10 @@ const { address } = storeToRefs(useStore)
 </script>
 
 <style lang="scss" scoped>
+.appDiv{
+    width: 100vw;
+    min-height: 100vh;
+}
 .headGlass{
     background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
@@ -79,9 +86,9 @@ const { address } = storeToRefs(useStore)
     border-top: 1px solid $main-color;
     padding: 0 30px;
     background-color: #332a25;
-    // position: fixed;
-    // bottom: 0;
-    // left: 0;
-    // z-index: 10;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
 }
 </style>

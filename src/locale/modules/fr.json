@@ -28,5 +28,14 @@
   "枚": "unités",
   "考核达标分红权重": "Pondération des dividendes pour évaluation réussie",
   "3个月试用激励层": "Niveau d'incitation d'essai de 3 mois",
-  "节点推荐激励": "Incitations de parrainage de nœuds"
+  "节点推荐激励": "Incitations de parrainage de nœuds",
+  "地址": "Adresse",
+  "金额": "Montant",
+  "邀请列表": "Liste d'Invitation",
+  "请输入邀请码": "Veuillez saisir le code d'invitation",
+  "白名单额度": "Quota de Liste Blanche",
+  "ATM空投激励": "Incitation Airdrop ATM",
+  "税费分红激励": "Incitation Taxes et Dividendes",
+  "白名单额度激励": "Incitation Quota de Liste Blanche",
+  "节点推广激励": "Incitation Promotion de Nœuds"
 }

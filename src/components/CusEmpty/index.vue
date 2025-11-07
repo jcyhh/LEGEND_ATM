@@ -11,7 +11,7 @@
 
 <style lang="scss" scoped>
 .nodata{
-    width: 236px;
-    height: 236px;
+    width: 140px;
+    height: 140px;
 }
 </style>

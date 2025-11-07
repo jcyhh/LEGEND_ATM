@@ -2,7 +2,7 @@
     <img src="@/assets/imgs/bg.jpg" class="bg">
     <div class="gap50"></div>
 
-    <div class="pl30 pr30 mt30 rel">
+    <div class="pl30 pr30 mt30 rel" v-if="nodeInfo">
         <div class="flex jc ac">
             <img src="@/assets/imgs/node.png" class="nodeImg">
             <div class="size28 main ml20 font2">{{ nodeInfo ? nodeInfo[1] : '--' }}</div>
@@ -37,10 +37,11 @@
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('考核达标可得空投') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeInfo[0])==1">500</span>
-                    <span v-if="Number(nodeInfo[0])==2">1500</span>
-                    <span v-if="Number(nodeInfo[0])==3">3000</span>
-                    <span v-if="Number(nodeInfo[0])==4">8000</span>
+                    <span v-if="Number(nodeInfo[0])==1">0</span>
+                    <span v-if="Number(nodeInfo[0])==2">500</span>
+                    <span v-if="Number(nodeInfo[0])==3">1500</span>
+                    <span v-if="Number(nodeInfo[0])==4">3000</span>
+                    <span v-if="Number(nodeInfo[0])==5">8000</span>
                      {{ $t('枚') }}
                 </div>
             </div>
@@ -51,10 +52,11 @@
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('考核达标分红权重') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeInfo[0])==1">1x</span>
-                    <span v-if="Number(nodeInfo[0])==2">1.2x</span>
-                    <span v-if="Number(nodeInfo[0])==3">1.6x</span>
-                    <span v-if="Number(nodeInfo[0])==4">2x</span>
+                    <span v-if="Number(nodeInfo[0])==1">0</span>
+                    <span v-if="Number(nodeInfo[0])==2">1x</span>
+                    <span v-if="Number(nodeInfo[0])==3">1.2x</span>
+                    <span v-if="Number(nodeInfo[0])==4">1.6x</span>
+                    <span v-if="Number(nodeInfo[0])==5">2x</span>
                 </div>
             </div>
         </div>
@@ -62,12 +64,13 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('3个月试用激励层') }}</div>
+                <div class="size30 font2 main">{{ $t('白名单额度') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeInfo[0])==1">V2</span>
-                    <span v-if="Number(nodeInfo[0])==2">V3</span>
-                    <span v-if="Number(nodeInfo[0])==3">V4</span>
-                    <span v-if="Number(nodeInfo[0])==4">V5</span>
+                    <span v-if="Number(nodeInfo[0])==1">0</span>
+                    <span v-if="Number(nodeInfo[0])==2">50</span>
+                    <span v-if="Number(nodeInfo[0])==3">180</span>
+                    <span v-if="Number(nodeInfo[0])==4">400</span>
+                    <span v-if="Number(nodeInfo[0])==5">1000</span>
                 </div>
             </div>
         </div>
@@ -77,13 +80,18 @@
             <div class="ml20">
                 <div class="size30 font2 main">{{ $t('节点推荐激励') }}</div>
                 <div class="size24 mt10">
-                    <span v-if="Number(nodeInfo[0])==1">10%</span>
+                    <span v-if="Number(nodeInfo[0])==1">0</span>
                     <span v-if="Number(nodeInfo[0])==2">10%</span>
-                    <span v-if="Number(nodeInfo[0])==3">20%</span>
+                    <span v-if="Number(nodeInfo[0])==3">10%</span>
                     <span v-if="Number(nodeInfo[0])==4">20%</span>
+                    <span v-if="Number(nodeInfo[0])==5">20%</span>
                 </div>
             </div>
         </div>
+
+        <div class="tc font2 size36 main mt30 mb30">{{ $t('邀请列表') }}</div>
+
+        <list></list>
 
     </div>
 
@@ -96,13 +104,18 @@ import { useDappStore } from '@/store';
 import { initTime } from '@/utils';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
+import list from './list.vue';
+import { apiPost } from '@/utils/request';
+import { getAddress } from '@/config/storage';
+import { publicPath } from '@/config';
 
 const dappStore = useDappStore()
 const { address } = storeToRefs(dappStore)
 
 const { init:initDonation, readGetUserPurchaseDetails } = useDonation()
 
-const inviteLink = computed(()=> address.value ? `${window.origin}?ref=${address.value}` : '--')
+const inviteCode = ref('')
+const inviteLink = computed(()=> address.value ? `${window.origin}${publicPath}?ref=${inviteCode.value}` : '--')
 
 watch(address, async val => {
     if(val){
@@ -113,9 +126,12 @@ watch(address, async val => {
 
 const nodeInfo = ref()
 const loadData = async () => {
+    apiPost('/api/users/invite_code',{
+        address: getAddress()
+    }).then((res:any)=>{
+        inviteCode.value = res.referral_code
+    })
     nodeInfo.value = await readGetUserPurchaseDetails()
-    console.log(nodeInfo.value);
-    
 }
 </script>
 
@@ -123,7 +139,7 @@ const loadData = async () => {
 .bg{
     width: 100vw;
     height: auto;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
 }
