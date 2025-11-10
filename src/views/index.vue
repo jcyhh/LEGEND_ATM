@@ -31,9 +31,12 @@ const { address, hasMetaMask, refAddress, refCode } = storeToRefs(dappStore)
 const { init:initDonation, readGetUserPurchaseDetails } = useDonation()
 
 if(query.ref){
+    console.log('邀请码',query.ref);
+    
     refCode.value = query.ref as string
     dappStore.getInviterInfo()
 }else{
+    console.log('没邀请码');
     refAddress.value = ''
     refCode.value = ''
 }
