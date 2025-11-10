@@ -13,12 +13,10 @@
 
 <script setup lang="ts">
 import { homePath } from '@/config/dapp';
-import { getAddress } from '@/config/storage';
 import { useEthers } from '@/dapp';
 import { useDonation } from '@/dapp/contract/donation/useDonation';
 import { routerReplace } from '@/router';
 import { useDappStore } from '@/store';
-import { apiPost } from '@/utils/request';
 import { storeToRefs } from 'pinia';
 import { watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -28,7 +26,7 @@ const { query } = useRoute()
 const { connectWallet } = useEthers()
 
 const dappStore = useDappStore()
-const { address, hasMetaMask, refAddress, refCode, userCode } = storeToRefs(dappStore)
+const { address, hasMetaMask, refAddress, refCode } = storeToRefs(dappStore)
 
 const { init:initDonation, readGetUserPurchaseDetails } = useDonation()
 
