@@ -32,10 +32,12 @@
   "地址": "Address",
   "金额": "Amount",
   "邀请列表": "Invitation List",
-  "请输入邀请码": "Please enter invitation code",
+  "请输入邀请码": "Please enter the invitation code",
   "白名单额度": "Whitelist Quota",
   "ATM空投激励": "ATM Airdrop Incentive",
-  "税费分红激励": "Tax & Dividend Incentive",
+  "税费分红激励": "Tax Dividend Incentive",
   "白名单额度激励": "Whitelist Quota Incentive",
-  "节点推广激励": "Node Promotion Incentive"
+  "节点推广激励": "Node Promotion Incentive",
+  "可得空投": "Available Airdrop",
+  "分红权重": "Dividend Weight"
 }

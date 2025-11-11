@@ -31,11 +31,13 @@
   "节点推荐激励": "Insentif cadangan node",
   "地址": "Alamat",
   "金额": "Jumlah",
-  "邀请列表": "Senarai Jemputan",
+  "邀请列表": "Senarai jemputan",
   "请输入邀请码": "Sila masukkan kod jemputan",
-  "白名单额度": "Kuota Senarai Putih",
-  "ATM空投激励": "Insentif Airdrop ATM",
-  "税费分红激励": "Insentif Cukai & Dividen",
-  "白名单额度激励": "Insentif Kuota Senarai Putih",
-  "节点推广激励": "Insentif Promosi Node"
+  "白名单额度": "Kuota senarai putih",
+  "ATM空投激励": "Insentif airdrop ATM",
+  "税费分红激励": "Insentif dividen cukai",
+  "白名单额度激励": "Insentif kuota senarai putih",
+  "节点推广激励": "Insentif promosi nod",
+  "可得空投": "Airdrop tersedia",
+  "分红权重": "Berat dividen"
 }

@@ -31,11 +31,13 @@
   "节点推荐激励": "Incitations de parrainage de nœuds",
   "地址": "Adresse",
   "金额": "Montant",
-  "邀请列表": "Liste d'Invitation",
+  "邀请列表": "Liste d'invitations",
   "请输入邀请码": "Veuillez saisir le code d'invitation",
-  "白名单额度": "Quota de Liste Blanche",
-  "ATM空投激励": "Incitation Airdrop ATM",
-  "税费分红激励": "Incitation Taxes et Dividendes",
-  "白名单额度激励": "Incitation Quota de Liste Blanche",
-  "节点推广激励": "Incitation Promotion de Nœuds"
+  "白名单额度": "Quota de liste blanche",
+  "ATM空投激励": "Incitatif d'airdrop ATM",
+  "税费分红激励": "Incitatif de dividende fiscal",
+  "白名单额度激励": "Incitatif de quota de liste blanche",
+  "节点推广激励": "Incitatif de promotion de nœud",
+  "可得空投": "Airdrop disponible",
+  "分红权重": "Pondération des dividendes"
 }

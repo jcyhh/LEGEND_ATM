@@ -31,11 +31,13 @@
   "节点推荐激励": "Khuyến khích giới thiệu Node",
   "地址": "Địa chỉ",
   "金额": "Số tiền",
-  "邀请列表": "Danh sách Mời",
+  "邀请列表": "Danh sách lời mời",
   "请输入邀请码": "Vui lòng nhập mã mời",
-  "白名单额度": "Hạn mức Danh sách Trắng",
-  "ATM空投激励": "Khuyến khích Airdrop ATM",
-  "税费分红激励": "Khuyến khích Thuế & Cổ tức",
-  "白名单额度激励": "Khuyến khích Hạn mức Danh sách Trắng",
-  "节点推广激励": "Khuyến khích Quảng bá Node"
+  "白名单额度": "Hạn mức whitelist",
+  "ATM空投激励": "Ưu đãi airdrop ATM",
+  "税费分红激励": "Ưu đãi cổ tức thuế",
+  "白名单额度激励": "Ưu đãi hạn mức whitelist",
+  "节点推广激励": "Ưu đãi quảng bá node",
+  "可得空投": "Airdrop có thể nhận",
+  "分红权重": "Trọng số cổ tức"
 }

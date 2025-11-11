@@ -43,7 +43,7 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('考核达标可得空投') }}</div>
+                <div class="size30 font2 main">{{ $t('可得空投') }}</div>
                 <div class="size24 mt10">
                     <span v-if="Number(nodeDetail[0])==1">0</span>
                     <span v-if="Number(nodeDetail[0])==2">500</span>
@@ -58,7 +58,7 @@
         <div class="card flex ac mb20">
             <img src="@/assets/imgs/atm.png" class="picAtm">
             <div class="ml20">
-                <div class="size30 font2 main">{{ $t('考核达标分红权重') }}</div>
+                <div class="size30 font2 main">{{ $t('分红权重') }}</div>
                 <div class="size24 mt10">
                     <span v-if="Number(nodeDetail[0])==1">0</span>
                     <span v-if="Number(nodeDetail[0])==2">1x</span>
