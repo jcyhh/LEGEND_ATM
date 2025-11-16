@@ -32,7 +32,6 @@ export function useDonation (contractAddress: string = import.meta.env.VITE_DONA
     // [写]购买节点
     const writePurchaseNode = async (...arg:any[]) => {
         console.log(arg);
-        
         try {
             showDappLoading()
             const estimatedGas = await contract.purchaseNode.estimateGas(...arg);

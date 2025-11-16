@@ -82,7 +82,6 @@ watch(address, async val => {
 
 const loadData = async () => {
     const isShowFirst = await readWhitelist()
-    console.log(isShowFirst);
     const nodes = await readGetAllNodesInfo()
     let groupedArrays: any[][] = []
     if (nodes && nodes.length > 0 && nodes[0].length === 5) {
@@ -92,7 +91,6 @@ const loadData = async () => {
         }
     }
     nodesList.value = isShowFirst ? groupedArrays : groupedArrays.slice(1)
-    console.log(nodesList.value);
 }
 
 const totalLeft = computed(()=>{

@@ -1,8 +1,11 @@
+import { getRef } from '@/config/storage'
 import { apiGet } from '@/utils/request'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 export const useDappStore = defineStore('dapp', () => {
+
+    const localRef = getRef() || ''
 
     const hasMetaMask = ref(0) // 0异步等待钱包对象注入中 1有MetaMask环境 2无MetaMask环境
 
@@ -10,7 +13,7 @@ export const useDappStore = defineStore('dapp', () => {
     const userCode = ref('') //邀请码
 
     const refAddress = ref() // 邀请人地址
-    const refCode = ref() // 邀请人邀请码
+    const refCode = ref(localRef) // 邀请人邀请码
 
     const updateHasMetaMask = (value:number) => hasMetaMask.value = value
 
@@ -24,6 +27,12 @@ export const useDappStore = defineStore('dapp', () => {
             refAddress.value = res.address
         })
     }
+
+    watch(refCode, val=>{
+        if(val){
+            getInviterInfo()
+        }
+    },{immediate:true})
 
     return {
         address,

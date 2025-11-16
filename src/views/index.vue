@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { homePath } from '@/config/dapp';
+import { getRef, setRef } from '@/config/storage';
 import { useEthers } from '@/dapp';
 import { useDonation } from '@/dapp/contract/donation/useDonation';
 import { routerReplace } from '@/router';
@@ -31,14 +32,21 @@ const { address, hasMetaMask, refAddress, refCode } = storeToRefs(dappStore)
 const { init:initDonation, readGetUserPurchaseDetails } = useDonation()
 
 if(query.ref){
-    console.log('邀请码',query.ref);
-    
-    refCode.value = query.ref as string
-    dappStore.getInviterInfo()
+    const inviteRef = query.ref as string
+    console.log('携带了邀请码',inviteRef);
+    setRef(inviteRef)
+    refCode.value = inviteRef
 }else{
-    console.log('没邀请码');
-    refAddress.value = ''
-    refCode.value = ''
+    console.log('没携带新邀请码，使用本地缓存');
+    const localRef = getRef()
+    if(localRef){
+        console.log('本地有缓存的邀请码', localRef);
+        refCode.value = localRef
+    }else{
+        console.log('本地没有邀请码，使用默认');
+        refAddress.value = ''
+        refCode.value = ''
+    }
 }
 
 // 当钱包对象异步注入到浏览器后，钱包登录 或者 去首页

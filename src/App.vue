@@ -51,8 +51,6 @@ const removeListener = () => {
 }
 // 回调：账户切换、断开钱包链接、网络切换
 const handlerChanged = async () => {  
-    console.log('111');
-      
     address.value = ''
     removeListener();
     routerReplace(startPath)
