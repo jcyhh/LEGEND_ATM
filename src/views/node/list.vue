@@ -3,7 +3,7 @@
         <div class="card mb20" v-for="(item,index) in list" :key="index">
             <div class="flex jb ac">
                 <div v-init:address="item.address"></div>
-                <div class="size30 font2 main" v-init="item.kpi"></div>
+                <div class="size30 font2 main" v-init="item.total_kpi"></div>
             </div>
             <div class="flex jb ac mt20 gray size24">
                 <div>{{ $t('地址') }}</div>
