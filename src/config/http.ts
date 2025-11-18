@@ -14,3 +14,4 @@ export type Api =
 | '/api/users/invite_code'
 | '/api/users/address'
 | '/api/users/referrals'
+| '/api/users/my'

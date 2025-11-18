@@ -83,10 +83,18 @@
                     <span v-if="Number(nodeInfo[0])==1">0</span>
                     <span v-if="Number(nodeInfo[0])==2">10%</span>
                     <span v-if="Number(nodeInfo[0])==3">10%</span>
-                    <span v-if="Number(nodeInfo[0])==4">20%</span>
+                    <span v-if="Number(nodeInfo[0])==4">15%</span>
                     <span v-if="Number(nodeInfo[0])==5">20%</span>
                 </div>
             </div>
+        </div>
+
+        <div class="card flex jb ac font2">
+            <div class="flex ac">
+                <img src="@/assets/imgs/team.png" class="img44 mr10">
+                <div class="size30 font2 main">{{ $t('团队业绩') }}</div>
+            </div>
+            <div class="size28" v-init="kpi"></div>
         </div>
 
         <div class="tc font2 size36 main mt30 mb30">{{ $t('邀请列表') }}</div>
@@ -105,7 +113,7 @@ import { initTime } from '@/utils';
 import { storeToRefs } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import list from './list.vue';
-import { apiPost } from '@/utils/request';
+import { apiGet, apiPost } from '@/utils/request';
 import { getAddress } from '@/config/storage';
 import { publicPath } from '@/config';
 
@@ -125,11 +133,17 @@ watch(address, async val => {
 },{immediate:true})
 
 const nodeInfo = ref()
+const kpi = ref()
 const loadData = async () => {
     apiPost('/api/users/invite_code',{
         address: getAddress()
     }).then((res:any)=>{
         inviteCode.value = res.referral_code
+    })
+    apiGet('/api/users/my',{
+        address: getAddress()
+    }).then((res:any)=>{
+        kpi.value = res.team_kpi
     })
     nodeInfo.value = await readGetUserPurchaseDetails()
 }

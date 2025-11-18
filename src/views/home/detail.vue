@@ -91,7 +91,7 @@
                     <span v-if="Number(nodeDetail[0])==1">0</span>
                     <span v-if="Number(nodeDetail[0])==2">10%</span>
                     <span v-if="Number(nodeDetail[0])==3">10%</span>
-                    <span v-if="Number(nodeDetail[0])==4">20%</span>
+                    <span v-if="Number(nodeDetail[0])==4">15%</span>
                     <span v-if="Number(nodeDetail[0])==5">20%</span>
                 </div>
             </div>
