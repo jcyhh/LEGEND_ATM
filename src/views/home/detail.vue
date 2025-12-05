@@ -5,12 +5,12 @@
         <img src="@/assets/imgs/Top.png" class="picTop animate__animated animate__flipInY delay3">
     </div>
 
-    <div class="pl80 pr80 rel">
+    <!-- <div class="pl80 pr80 rel">
         <div class="progress">
             <div class="progressBox" :style="{width: `${progress}%`}"></div>
         </div>
         <div class="tc mt10 size28 font2">{{ totalLeft }} / {{ totalRight }} {{ $t('nodes sold') }}</div>
-    </div>
+    </div> -->
 
     <div class="pl30 pr30 mt30 rel" v-if="nodeDetail.length>0">
         <div class="flex jb ac">
@@ -31,10 +31,10 @@
             </div>
         </div>
 
-        <div class="progress1 mt30 flex ac je">
+        <!-- <div class="progress1 mt30 flex ac je">
             <div class="progressBox1" :style="{width: `${nodeProgress}%`}"></div>
             <div class="size24 pr30 rel">{{ nodeDetail[4] > nodeDetail[3] ? nodeDetail[3] : nodeDetail[4] }} / {{ nodeDetail[3] }}</div>
-        </div>
+        </div> -->
 
         <div class="submitbtn mt30 size28 font2" @click="submit" v-if="id==0">{{ $t('Buy Now') }}</div>
 
@@ -127,24 +127,25 @@ import { useReferral } from '@/dapp/contract/referral/useReferral';
 import { t } from '@/locale';
 import { routerReplace } from '@/router';
 import { useAppStore, useDappStore } from '@/store';
-import { computedDiv } from '@/utils';
+// import { computedDiv } from '@/utils';
 import { message } from '@/utils/message';
 import { apiGet, apiPost } from '@/utils/request';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 const useStore = useAppStore()
-const { nodeDetail, totalLeft, totalRight, progress } = storeToRefs(useStore)
+// const { nodeDetail, totalLeft, totalRight, progress } = storeToRefs(useStore)
+const { nodeDetail } = storeToRefs(useStore)
 
 if(nodeDetail.value.length==0){
     routerReplace('/home/index')
 }
 
-const nodeProgress = computed(()=>{
-    if(nodeDetail.value.length>0){
-        return Math.floor(computedDiv(nodeDetail.value[4] > nodeDetail.value[3] ? nodeDetail.value[3] : nodeDetail.value[4], nodeDetail.value[3]) * 10000) / 100
-    }else return 0
-})
+// const nodeProgress = computed(()=>{
+//     if(nodeDetail.value.length>0){
+//         return Math.floor(computedDiv(nodeDetail.value[4] > nodeDetail.value[3] ? nodeDetail.value[3] : nodeDetail.value[4], nodeDetail.value[3]) * 10000) / 100
+//     }else return 0
+// })
 
 const dappStore = useDappStore()
 const { address, refCode, refAddress } = storeToRefs(dappStore)

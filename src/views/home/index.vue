@@ -5,12 +5,12 @@
         <img src="@/assets/imgs/Top.png" class="picTop animate__animated animate__flipInY delay3">
     </div>
 
-    <div class="pl80 pr80 rel">
+    <!-- <div class="pl80 pr80 rel">
         <div class="progress">
             <div class="progressBox" :style="{width: `${progress}%`}"></div>
         </div>
         <div class="tc mt10 size28 font2">{{ totalLeft }} / {{ totalRight }} {{ $t('nodes sold') }}</div>
-    </div>
+    </div> -->
 
     <div class="pl30 pr30 mt30 rel">
 
@@ -25,7 +25,8 @@
                     </div>
                 </div>
                 <div class="flex jb ac pt10 pb20 font2 nodeCont">
-                    <div class="buy size20 flex jc ac flex0">{{ item[4] > item[3] ? item[3] : item[4] }} / {{ item[3] }}</div>
+                    <!-- <div class="buy size20 flex jc ac flex0">{{ item[4] > item[3] ? item[3] : item[4] }} / {{ item[3] }}</div> -->
+                     <div class="buy size20 flex jc ac flex0">{{ item[3] }}</div>
                     <div class="buy size20 flex jc ac line1 lh40" @click="godetail(item)">{{ $t('Buy Now') }}</div>
                 </div>
             </div>
